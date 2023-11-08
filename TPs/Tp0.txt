@@ -1,0 +1,106 @@
+;;;;;;;;;;;;;;
+; Exercice 1 ;
+;;;;;;;;;;;;;;
+
+(+ 3 4) ; 7
+(< 10 100) ; #t
+(and (< 55 100) (> 55 0)) ; #t
+(* 1 2 3) ; #6
+;(if (10 < 20) #t #f)
+
+;;;;;;;;;;;;;;
+; Exercice 2 ;
+;;;;;;;;;;;;;;
+
+(if (< 10 20) #t #f) ; #t
+; Expression équivalente : #t directement
+
+;;;;;;;;;;;;;;
+; Exercice 3 ;
+;;;;;;;;;;;;;;
+
+(+ (- 2 6) 10)
+; 6
+(+ 2 (* 5 (+ (- 3) 12)))
+; 47
+(/ (/ 9 2) (/ 2 4))
+; 9
+
+;;;;;;;;;;;;;;
+; Exercice 4 ;
+;;;;;;;;;;;;;;
+
+(not (and (< 55 100) (> 55 0)))
+(or (not (< 55 100)) (not (> 55 0)))
+
+;;;;;;;;;;;;;;
+; Exercice 5 ;
+;;;;;;;;;;;;;;
+; Elles donnent toujours le même résultat car
+; (non (A et B)) équivaut à ((non A) ou (non B))
+; en logique des propositions, cf. tables de vérité
+
+;;;;;;;;;;;;;;
+; Exercice 6 ;
+;;;;;;;;;;;;;;
+
+(define (puis2 x)
+   (* x x))
+
+;;;;;;;;;;;;;;
+; Exercice 7 ;
+;;;;;;;;;;;;;;
+
+(puis2 3) ; 9
+(puis2 -4) ; 16
+(puis2 1) ; 1
+(puis2 (puis2 2)) ; 16
+(puis2 (puis2 1)) ; 1
+
+;;;;;;;;;;;;;;
+; Exercice 8 ;
+;;;;;;;;;;;;;;
+
+(define (puis4 x) 
+   (puis2 (puis2))
+) 
+;;;;;;;;;;;;;;
+; Exercice 9 ;
+;;;;;;;;;;;;;;  
+  
+(define (puis4 x) 
+   (puis2 (puis2 x)))
+  
+(puis4 10)
+
+;;;;;;;;;;;;;;;
+; Exercice 10 ;
+;;;;;;;;;;;;;;;
+
+;
+(expt 12345 12345)
+;
+(floor 1.5)
+;
+(quotient 45 6)
+(remainder 45 6)
+(define divisible? 
+  (lambda (a b)
+    (= 0 (remainder a b))))
+
+(divisible? 45 6)
+(divisible? 45 5)
+;
+(define (test x)
+  (cond 
+    ((= 5 x) 3)
+    ((<= 8 x) (* x x))
+    ((= 6 x) "toto")
+    ((= 7 x) #t)
+    (else #f)))
+
+(test 4) ; #f
+(test 5) ; 3
+(test 6) ; "toto"
+(test 7) ; #t
+(test 8) ; 64

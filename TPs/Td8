@@ -1,0 +1,130 @@
+; TD 8
+;;;;;;;
+
+; le rendu de monnaie
+; Somme S à rendre
+; pièces (le nombre de pièces et leurs valeurs)
+; Si S=0 -> 1 seule facon de rendre la monnaie
+; Si S<0 -> 0 facon, je ne peux pas rendre qqe chose de négatif
+; Si S>0 et n=0 -> 0 facon de rendre la monnaie
+
+; je suppose avoir n pièces : je considère la première pièce de valeur d.
+; il y a des solutions avec cette pièce et des solutions sans
+; 1er cas : il reste à rendre (S-d) avec n pièces
+; 2ème cas : il reste à rendre S avec n-1 pièces
+(define (valeurPiecesEuro piece)
+  (cond ((= piece 1) 1)
+        ((= piece 2) 2)
+        ((= piece 3) 5)
+        ((= piece 4) 10)
+        ((= piece 5) 20)
+        ((= piece 6 ) 50)
+        ((= piece 7 ) 100)
+        ((= piece 8 ) 200)
+        ))
+
+(define (rendreMonnaie somme nbSortesPieces valeurPiece)
+  (letrec ((rendre (lambda (somme n)
+                     (cond ((= somme 0) 1)
+                           ((or (< somme 0) (= n 0)) 0)
+                           (else (+ (rendre somme (- n 1)) (rendre (- somme (valeurPiece n)) n)))))))
+    (rendre somme nbSortesPieces)))
+
+(define (rendreEuro somme)
+  (rendreMonnaie somme 8 valeurPiecesEuro))
+; EXERCICE 1
+
+(define (rendreMonnaieListe somme nbSortesPieces valeurPiece)
+  (define (rendre somme n rendu_en_cours) ; construit un rendu de monnaie
+    (cond ((= somme 0) (list rendu_en_cours)) ; ici : 
+          ((or (< somme 0) (= n 0)) ()) ; cul de sac...mauvais choix
+          (else (append
+                 (rendre somme (- n 1) rendu_en_cours) ; la même somme à rendre
+                 (rendre (- somme (valeurPiece n)) ; ajout d'une valeur à ma liste
+                         n
+                         (cons (valeurPiece n) rendu_en_cours))
+                 ))))
+  (rendre somme nbSortesPieces '()))
+
+; let : création un alias un identifiant <-> une expression
+; (letrec ((a (+ 3 4))
+;      (f (lambda (n) (+ 2 n)))
+;      (g (lamda (n) (.... g(- n 1)...)
+
+; EXERCICE 2
+; on va choisir une paire. On aurait pu prendre une liste.
+; la couleur est représentée par un booléen : noir #t rouge #f
+
+(define (make-noeud int col)
+  (cons int col))
+
+(define (get-noeud-int node)
+  (car node))
+
+(define (get-noeud-col node)
+  (cdr node))
+
+(define (noir? node)
+  (get-noeud-col node))
+
+(define (noeud-pair? node)
+  (even? (get-noeud-int node)))
+
+(define noir #t)
+(define rouge #f)
+
+(define n (make-noeud 4 rouge))
+(define m (make-noeud 5 noir))
+
+(define empty-arn ())
+(define (make-arn node left right)
+  (list node left right))
+(define (get-root arn)
+  (car arn))
+(define (get-left arn)
+  (cadr arn))
+(define (get-right arn)
+  (caddr arn))
+(define (empty-arn? arn)
+  (null? arn))
+(define (leaf? arn)
+  (and (not (empty-arn? arn))
+       (empty-arn? (get-left arn))
+       (empty-arn? (get-right arn))))
+; EXERCICE 4
+; rouge=#f : si pair=vrai alors rouge (qui vaut #f)
+; noir=#t : si pair=faux alors on veut noir (qui vaut #t)
+(define (pairARN arbre)
+  (if (empty-arn? arbre)
+      empty-arn
+      (let ((root (get-root arbre))
+            (left (get-left arbre))
+            (right (get-right arbre)))
+        (make-arn
+         (make-noeud (get-noeud-int root)
+                     (if (noeud-pair? root)
+                         rouge
+                         noir))
+         (pairARN left)
+         (pairARN right)))))
+      
+; branche monochrome
+; vide OK
+; feuille OK
+; si arbre gauche est monochrome et racine(gauche) a la même couleur que la racine
+; si arbre droit est monochrome et racine(droit) a la même couleur que la racine
+
+(define (monochrome? arbre)
+  (if (or (empty-arn? arbre) (leaf? arbre))
+      #t
+      (or (and (monochrome? (get-left arbre))
+               (equal? (get-noeud-col (get-root arbre))
+                       (get-noeud-col (get-root (get-left arbre)))))
+          (and (monochrome? (get-right arbre))
+               (equal? (get-noeud-col (get-root arbre))
+                       (get-noeud-col (get-root (get-right arbre))))))))
+          
+; TEST
+(define arbre (make-arn (make-noeud 5 rouge)
+                        (make-arn (make-noeud 6 rouge) '() '())
+                        (make-arn (make-noeud 8 noir) '() '())))

@@ -1,0 +1,55 @@
+;TD 7
+
+;Exercice 1
+
+(define (faire_complexe a b)
+  (list a b))
+
+(define (partie_reel c)
+  (car c))
+
+(define (partie_imag c)
+  (cadr c))
+
+(define (reel? c)
+   (= 0 (partie_imag c)))
+
+(define (imag? c)
+   (= 0 (partie_reel? c)))
+
+;utilisation de l'interface
+
+(define (somme_complexe z c)
+  (let ((zr(partie_reel z))
+        (zi(partie_imag z))
+        (cr (partie_reel c))
+        (ci (partie_imag c)))
+      (faire_complexe (+ cr zr) (+ zi ci))))
+
+(define (produit_complexe z c)
+  (let ((zr(partie_reel z))
+        (zi(partie_imag z))
+        (cr (partie_reel c))
+        (ci (partie_imag c)))
+      (faire_complexe (- (* cr zr) (* ci zi))
+                      (+ (* cr zi)(* ci zr)))))
+
+(define (inverse_complexe z)
+   (let* ((zr(partie_reel z))
+         (zi(partie_imag z))
+         (d (+ (* zr zr) (* zi zi))))
+     (if (= d 0)
+         (display "IMPOSSIBLE : division par zero")
+  (faire_complexe (/ zr d) (/ (- zi) d)))))
+
+(define (division_complexe z c)
+  (produit_complexe z (inverse_complexe c)))
+
+(define (puissance z n)
+(define (puissance_term z n acc)
+  (if (= n 0)
+      acc
+      (puissance_term z (- n 1) (produit_complexe z acc))))
+(if (>= n 0)
+  (puissance_term z n (faire_complexe 1 0))
+  (puissance_term (inverse_complexe z) (- n) (faire_complexe 1 0))))

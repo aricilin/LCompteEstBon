@@ -1,0 +1,80 @@
+; car=> tete
+; cdr => queue
+
+;Exo 1
+(cons (cons 1 2) (cons 3 4))
+;reponse ((1 . 2) 3 . 4)
+(cdr (cons 1 (cons 2 ())))
+;reponse (2)
+(list? (cons (cons 1 2) (cons 3 4)))
+;reponse #f
+(list? '(1 2 3))
+;reponse #t
+(pair? '(1 2 3))
+;reponse #t
+;tous les liste sauf la liste vide sont paire toujours
+' (1 2 (3 4)"toto" ((5 6)))
+'()
+;Exo 2
+'(9 (((8 4 5 (4) 25) 3) 7))
+;reponse : (9 (((8 4 5 (4) 25) 3) 7))
+(car ' (() ()))
+;reponse : ()
+(cdr ' (() ()))
+; reponse : (())
+'(56 ’p (’K 6) 8 (() (7 6 2)))
+; reponse : (56 ’p (’K 6) 8 (() (7 6 2)))
+
+;Exo 3
+(car '(2))
+; reponse : 2
+(cdr '(2))
+; reponse : ()
+(define liste (list '(2) '((1 2) 3 4) '(() ()) '(1 (2 (3 4 5) 6) 7)'(((8 4) 6 (5 4)) '(7 8 9))))
+
+;map ;reduce; filter
+
+;cddr => queue de queue
+;cdadr => queue de la tete de la queue
+;cadar => tete de queue de tete
+(display "----------Exo 4------------")
+;Exo 4
+
+;(+ ( 2 6) 10); Erreur
+'(+ ( 2 6) 10) ; reponse : (+ (2 6) 10)
+(car (car '((5 9) 7 5))) ; reponse : 5
+(car (cdr '((5 9) 7 5))) ; reponse : 7
+(cdr (car '((5 9) 7 5))) ; reponse : (9)
+(cdr (cdr '((5 9) 7 5))) ; reponse : (5)
+(cons '(a b) '(c d))     ; reponse : ((a b) c d)
+(cons (+ 2 5) '(e f))    ; reponse : (7 e f)
+(cons 'a '(b c d))       ; reponse : (a b c d)
+(cons 'a '())            ;reponse :  (a)
+(cons (car '(a b c)) (cdr '(a b c))) ;reponse :  (a b c)  
+(let ((l '(a (b c e))))  
+(if (equal? (cdr l) ()) 'yes 'nope)) ; reponse : nope
+
+; caar => car(car (...
+; cddr => cdr(cdr (...
+
+;Exo 5
+(define a (cons '+ (cons (cons ' * (cons (+ 2 6) (cons 3 ()))) (cons (+ 1 3) ()))))
+; a = (+ (* 8 3) 4)
+; cdr a = ((* 8 3) 4)
+; car a = +
+; cdadr a= (8 3) queue de tete de queue
+; eval a= 28
+
+;Exo 6
+(define (premdeux? x l)
+ (cond ((null? l) #f)
+       ((equal? x (car l)) #t)
+       ((null? (cdr l)) #f)
+       ((equal? x (cadr l)) #t)
+       (else #f)))
+
+(list '1 '(+) '(2 3))
+
+(append '(1 2 3) '(4 5 6) '(7))
+
+;Exo 7
